@@ -1,0 +1,1462 @@
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+DATA: 22/07/2026 18:47:14
+
+CONTEXTO:
+
+
+USUÁRIO:
+Como mover um GameObject para frente no Update usando C# na Unity?
+
+ASSISTENTE:
+Para mover um GameObject para frente no Update usando C# na Unity, você pode usar o método `transform.Translate()`. Este método permite que você mova o objeto em relação ao seu sistema de coordenadas local. Aqui está um exemplo básico de como fazer isso:
+
+```csharp
+using UnityEngine;
+
+public class MoveForward : MonoBehaviour
+{
+    public float speed = 5f; // Velocidade de movimento
+
+    void Update()
+    {
+        // Mover o objeto para frente (no eixo Z)
+        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+    }
+}
+```
+
+### Explicação:
+- **Vector3.forward**: Este é um vetor unitário que aponta para a frente no sistema de coordenadas local do objeto.
+- **speed**: É a velocidade à qual o objeto se move.
+- **Time.deltaTime**: É uma propriedade que garante que o movimento seja suave e independente da taxa de quadros (FPS). Isso ajuda a evitar problemas de movimento acelerado ou desacelerado dependendo da taxa de quadros.
+
+### Como Usar:
+1. Crie um novo script chamado `MoveForward` e cole o código acima nele.
+2. Adicione este script ao GameObject que você deseja mover.
+3. Ajuste o valor da variável `speed` conforme necessário para controlar a velocidade de movimento.
+
+Este código fará com que o GameObject se mova para frente continuamente enquanto o jogo estiver rodando. Se você quiser que o objeto pareça estar se movendo para trás, basta multiplicar por `-1`, assim:
+
+```csharp
+transform.Translate(Vector3.back * speed * Time.deltaTime);
+```
+
+Isso moverá o objeto para trás em vez de para frente.
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+DATA: 22/07/2026 18:48:33
+
+CONTEXTO:
+
+
+USUÁRIO:
+Como fazer a câmera seguir o jogador de forma suave (Lerp)?
+
+ASSISTENTE:
+Para fazer uma câmera seguir o jogador de forma suave no Unity, você pode usar a função `Vector3.Lerp` para interpolar entre a posição atual da câmera e a posição desejada. Aqui está um exemplo básico de como implementar isso:
+
+```csharp
+using UnityEngine;
+
+public class CameraFollow : MonoBehaviour
+{
+    public Transform player; // Referência ao transform do jogador
+    public float smoothSpeed = 0.125f; // Velocidade de suavização
+
+    private Vector3 velocity = Vector3.zero;
+
+    void LateUpdate()
+    {
+        // Define a posição desejada da câmera (exemplo: acima e atrás do jogador)
+        Vector3 desiredPosition = player.position + new Vector3(0, 10, -10);
+
+        // Interpola entre a posição atual e a posição desejada
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+
+        // Aplica a posição suavizada à câmera
+        transform.position = smoothedPosition;
+
+        // Mantém a rotação da câmera fixa (opcional)
+        transform.LookAt(player);
+    }
+}
+```
+
+### Explicação:
+1. **Transform do Jogador**: O campo `player` deve ser atribuído no Inspector para referenciar o objeto do jogador.
+2. **Velocidade de Suavização**: O campo `smoothSpeed` controla a velocidade com que a câmera se aproxima da posição desejada. Um valor menor resultará em uma câmera mais suave, enquanto um valor maior resultará em movimento mais rápido.
+3. **Interpolação (`Vector3.Lerp`)**: Esta função interpola linearmente entre duas posições. Ela usa a fórmula `(1 - t) * start + t * end`, onde `t` é a fração de progresso (no caso, `smoothSpeed`).
+4. **Aplicando a Posição**: A nova posição calculada é aplicada ao transform da câmera.
+
+### Como Usar:
+- Adicione este script à sua câmera.
+- No Inspector, atribua o transform do seu jogador ao campo `Player`.
+- Ajuste a velocidade de suavização conforme necessário.
+
+Este método garante que a câmera siga o jogador de forma suave, evitando movimentos bruscos ou inestáveis. Você pode ajustar a posição desejada (`desiredPosition`) conforme necessário para obter o comportamento específico que deseja.
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+DATA: 22/07/2026 18:54:46
+
+CONTEXTO:
+
+
+USUÁRIO:
+Estou com esse erro no console: Can't add script component 'Player Movement' because the script class cannot be found. Como posso resolver?
+
+ASSISTENTE:
+Esse erro geralmente ocorre quando o Unity não consegue encontrar a classe correspondente ao componente de script que você está tentando adicionar a um GameObject. Aqui estão algumas etapas que você pode seguir para resolver o problema:
+
+1. **Verifique o Nome da Classe e do Arquivo**:
+   - Certifique-se de que o nome da classe do seu script é exatamente igual ao nome do arquivo .cs.
+   - Por exemplo, se o nome do arquivo for `PlayerMovement.cs`, então a classe dentro desse arquivo deve ser chamada `PlayerMovement`.
+
+2. **Salve o Projeto**:
+   - Às vezes, o Unity pode não reconhecer as alterações até que você salve o projeto.
+
+3. **Reabra o Projeto**:
+   - Feche e reabra o Unity para garantir que todas as mudanças são carregadas corretamente.
+
+4. **Verifique a Pasta do Script**:
+   - Certifique-se de que o script esteja localizado na pasta `Assets` ou em uma subpasta dela. O Unity só reconhece scripts que estão diretamente sob a pasta `Assets`.
+
+5. **Limpe e Recompile o Projeto**:
+   - No menu `Edit > Project Settings > Player`, clique em `Reset Player Settings`.
+   - Em seguida, vá para `File > Build Settings`, selecione sua plataforma e clique em `Build and Run`. Isso irá limpar e recompilar o projeto.
+
+6. **Verifique os Usings**:
+   - Se o seu script usa namespaces, certifique-se de que eles estão corretamente declarados no início do arquivo. Por exemplo:
+     ```csharp
+     using UnityEngine;
+     ```
+
+7. **Reinicie o Editor**:
+   - Às vezes, reiniciar o editor do Unity pode resolver problemas temporários.
+
+8. **Verifique por Erros no Código**:
+   - Abra o script no Visual Studio (ou outro IDE) e verifique se há erros de sintaxe ou outros problemas que possam estar impedindo a compilação.
+
+Se você seguir essas etapas e ainda estiver enfrentando o problema, por favor, forneça mais detalhes sobre o seu script e como ele está estruturado para que eu possa ajudar melhor.
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+DATA: 22/07/2026 18:56:46
+
+CONTEXTO:
+
+
+USUÁRIO:
+Estou criando um personagem 3D na Unity. Ele usa Rigidbody e eu quero um sistema de movimentação com WASD, aceleração suave e rotação seguindo a direção do movimento. Gere o script C# completo e explique onde colocar cada componente.
+
+ASSISTENTE:
+Claro! Vou te ajudar a criar um script de movimentação para seu personagem 3D no Unity utilizando Rigidbody e inputs WASD. O script será responsável por controlar a velocidade do personagem, aplicar aceleração suave e rotacioná-lo conforme a direção de movimento.
+
+### Passo 1: Criar o Script
+
+Primeiro, crie um novo script chamado `PlayerMovement` no Unity:
+
+1. No menu do Unity, vá para `Assets > Create > C# Script`.
+2. Nomeie o script como `PlayerMovement`.
+
+### Passo 2: Escrever o Código
+
+Abra o arquivo `PlayerMovement.cs` e substitua todo o conteúdo pelo seguinte código:
+
+```csharp
+using UnityEngine;
+
+public class PlayerMovement : MonoBehaviour
+{
+    public float speed = 5f; // Velocidade base do personagem
+    public float acceleration = 10f; // Aceleração suave
+    public float rotationSpeed = 100f; // Velocidade de rotação
+
+    private Vector3 velocity;
+    private Rigidbody rb;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    void FixedUpdate()
+    {
+        // Obter os inputs do jogador
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+
+        // Calcular o vetor de direção de movimento
+        Vector3 movementDirection = new Vector3(moveHorizontal, 0.0f, moveVertical);
+
+        // Aplicar aceleração suave ao Rigidbody
+        if (movementDirection != Vector3.zero)
+        {
+            Vector3 targetVelocity = movementDirection.normalized * speed;
+            velocity = Vector3.MoveTowards(velocity, targetVelocity, acceleration * Time.fixedDeltaTime);
+        }
+        else
+        {
+            velocity = Vector3.MoveTowards(velocity, Vector3.zero, acceleration * Time.fixedDeltaTime);
+        }
+
+        // Atualizar a posição do Rigidbody
+        rb.velocity = transform.forward * velocity.magnitude;
+
+        // Rotacionar o personagem para seguir a direção de movimento
+        if (movementDirection != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(movementDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+        }
+    }
+}
+```
+
+### Passo 3: Configurar o Personagem
+
+Agora, você precisa configurar o personagem no Unity para usar este script:
+
+1. Selecione o objeto do seu personagem no Editor.
+2. Adicione um componente `Rigidbody` ao seu personagem:
+   - No Inspector, clique em `Add Component`, procure por `Physics > Rigidbody` e adicione-o.
+3. Certifique-se de que o Rigidbody tem as seguintes configurações:
+   - `Is Kinematic`: Desmarque esta opção.
+   - `Use Gravity`: Marque esta opção se desejar que o personagem seja afetado pela gravidade.
+4. Adicione o script `PlayerMovement` ao seu personagem:
+   - No Inspector, clique em `Add Component`, procure por `Scripts > PlayerMovement` e adicione-o.
+5. Configure as variáveis públicas do script `PlayerMovement` conforme necessário:
+   - `speed`: Defina a velocidade base do personagem.
+   - `acceleration`: Defina a aceleração suave.
+   - `rotationSpeed`: Defina a velocidade de rotação.
+
+### Explicação do Código
+
+- **Variables**:
+  - `speed`: Define a velocidade base do personagem.
+  - `acceleration`: Controla a aceleração suave do personagem.
+  - `rotationSpeed`: Controla a velocidade de rotação do personagem.
+  - `velocity`: Armazena a velocidade atual do personagem.
+  - `rb`: Referência ao componente Rigidbody do personagem.
+
+- **Start()**: Inicializa o Rigidbody do personagem.
+
+- **FixedUpdate()**: Este método é chamado fixamente a uma taxa de quadros definida pelo motor físico do Unity. É ideal para manipular Rigidbodys.
+
+  - **Inputs**: Obtém os inputs do jogador para mover o personagem (`WASD`).
+  - **Direção de Movimento**: Calcula o vetor de direção de movimento com base nos inputs.
+  - **Aceleração Suave**: Aplica uma aceleração suave ao Rigidbody para chegar à velocidade desejada.
+  - **Atualização da Posição**: Atualiza a posição do Rigidbody com base na velocidade calculada.
+  - **Rotação**: Rotaciona o personagem para seguir a direção de movimento.
+
+### Conclusão
+
+Este script permite que seu personagem seja movido usando as teclas WASD com ac
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+DATA: 22/07/2026 19:08:13
+
+CONTEXTO:
+
+
+USUÁRIO:
+Meu personagem Unity usa Rigidbody. Crie um sistema de pulo com:
+- detecção de chão usando Raycast;
+- variável de força do pulo no Inspector;
+- coyote time;
+- bloqueio de pulo duplo;
+- código organizado seguindo boas práticas.
+
+ASSISTENTE:
+Claro! Vou te guiar através da criação de um sistema de pulo para o seu personagem Unity que utiliza `Rigidbody`. O sistema incluirá:
+
+1. Detecção de chão usando Raycast.
+2. Variável de força do pulo no Inspector.
+3. Coyote Time (tempo de tolerância para detectar o chão após a colisão).
+4. Bloqueio de pulo duplo.
+5. Código organizado seguindo boas práticas.
+
+### Passo 1: Configuração Inicial
+
+Primeiro, certifique-se de que seu personagem tem um componente `Rigidbody` e um collider (como BoxCollider ou CapsuleCollider).
+
+### Passo 2: Criando o Script de Pulo
+
+Crie um novo script chamado `PlayerController.cs` e adicione o seguinte código:
+
+```csharp
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    public float jumpForce = 5f; // Força do pulo
+    public float coyoteTime = 0.1f; // Tempo de tolerância para detectar o chão
+    private bool isGrounded;
+    private float groundCheckRadius = 0.1f;
+    private Vector3 groundCheckPoint;
+    private Rigidbody rb;
+    private bool canJump = true;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        groundCheckPoint = transform.position - new Vector3(0, groundCheckRadius, 0);
+    }
+
+    void Update()
+    {
+        CheckGround();
+        Jump();
+    }
+
+    void CheckGround()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(groundCheckPoint, groundCheckRadius);
+
+        if (hitColliders.Length > 0)
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+    }
+
+    void Jump()
+    {
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            canJump = false;
+            Invoke("EnableJump", coyoteTime);
+        }
+        else if (Input.GetButtonDown("Jump") && !canJump)
+        {
+            Debug.Log("Cannot jump while in air.");
+        }
+    }
+
+    void EnableJump()
+    {
+        canJump = true;
+    }
+}
+```
+
+### Explicação do Código
+
+1. **Variáveis Publicas**:
+   - `jumpForce`: Define a força do pulo.
+   - `coyoteTime`: Define o tempo de tolerância para detectar o chão após a colisão.
+
+2. **Variáveis Privadas**:
+   - `isGrounded`: Indica se o personagem está no chão.
+   - `groundCheckRadius`: Raio usado para verificar a colisão com o chão.
+   - `groundCheckPoint`: Ponto onde será feita a verificação de colisão.
+   - `rb`: Referência ao componente `Rigidbody`.
+   - `canJump`: Controla se o personagem pode pular novamente.
+
+3. **Métodos**:
+   - `Start()`: Inicializa as variáveis e obtém referências necessárias.
+   - `Update()`: Chama os métodos `CheckGround()` e `Jump()`.
+   - `CheckGround()`: Verifica se há uma colisão com o chão usando um raio esférico.
+   - `Jump()`: Implementa o pulo. Se o jogador pressionar "Jump" e estiver no chão, aplica uma força vertical ao personagem. Se o jogador pressionar "Jump" enquanto está no ar, exibe uma mensagem de erro.
+   - `EnableJump()`: Habilita o pulo novamente após o tempo definido pelo `coyoteTime`.
+
+### Passo 3: Adicionando o Script ao Personagem
+
+1. Arraste o script `PlayerController.cs` para o seu personagem no Editor Unity.
+2. No Inspector, você poderá ajustar as variáveis públicas (`jumpForce` e `coyoteTime`) conforme necessário.
+
+### Passo 4: Testando o Jogo
+
+Agora, você pode testar o jogo. Quando o personagem estiver no chão, ele deve ser capaz de pular. Se o jogador tentar pular enquanto estiver no ar, ele não poderá fazer outro pulo até que ele toque no chão novamente.
+
+Este é um sistema básico de pulo que você pode expandir conforme necessário, adicionando mais funcionalidades como saltos múltiplos, pulos altos, etc.
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+DATA: 22/07/2026 19:11:32
+
+CONTEXTO:
+
+
+USUÁRIO:
+Meu personagem Unity usa Rigidbody. Crie um sistema de pulo com:
+- detecção de chão usando Raycast;
+- variável de força do pulo no Inspector;
+- coyote time;
+- bloqueio de pulo duplo;
+- código organizado seguindo boas práticas.
+
+ASSISTENTE:
+Claro! Vou te guiar através da criação de um sistema de pulo para o seu personagem Unity que utiliza `Rigidbody`. O sistema incluirá:
+
+1. Detecção de chão usando Raycast.
+2. Variável de força do pulo no Inspector.
+3. Coyote Time (tempo de tolerância para detectar o chão após a colisão).
+4. Bloqueio de pulo duplo.
+5. Código organizado seguindo boas práticas.
+
+### Passo 1: Configuração Inicial
+
+Primeiro, certifique-se de que seu personagem tem um componente `Rigidbody` e um collider (como BoxCollider ou CapsuleCollider).
+
+### Passo 2: Criando o Script de Pulo
+
+Crie um novo script chamado `PlayerController.cs` e adicione o seguinte código:
+
+```csharp
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    public float jumpForce = 5f; // Força do pulo
+    public float coyoteTime = 0.1f; // Tempo de tolerância para detectar o chão
+    private bool isGrounded;
+    private float groundCheckRadius = 0.1f;
+    private Vector3 groundCheckPoint;
+    private Rigidbody rb;
+    private bool canJump = true;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        groundCheckPoint = transform.position - new Vector3(0, groundCheckRadius, 0);
+    }
+
+    void Update()
+    {
+        CheckGround();
+        Jump();
+    }
+
+    void CheckGround()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(groundCheckPoint, groundCheckRadius);
+
+        if (hitColliders.Length > 0)
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+    }
+
+    void Jump()
+    {
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            canJump = false;
+            Invoke("EnableJump", coyoteTime);
+        }
+        else if (Input.GetButtonDown("Jump") && !canJump)
+        {
+            Debug.Log("Cannot jump while in air.");
+        }
+    }
+
+    void EnableJump()
+    {
+        canJump = true;
+    }
+}
+```
+
+### Explicação do Código
+
+1. **Variáveis Publicas**:
+   - `jumpForce`: Define a força do pulo.
+   - `coyoteTime`: Define o tempo de tolerância para detectar o chão após a colisão.
+
+2. **Variáveis Privadas**:
+   - `isGrounded`: Indica se o personagem está no chão.
+   - `groundCheckRadius`: Raio usado para verificar a colisão com o chão.
+   - `groundCheckPoint`: Ponto onde será feita a verificação de colisão.
+   - `rb`: Referência ao componente `Rigidbody`.
+   - `canJump`: Controla se o personagem pode pular novamente.
+
+3. **Métodos**:
+   - `Start()`: Inicializa as variáveis e obtém referências necessárias.
+   - `Update()`: Chama os métodos `CheckGround()` e `Jump()`.
+   - `CheckGround()`: Verifica se há uma colisão com o chão usando um raio esférico.
+   - `Jump()`: Implementa o pulo. Se o jogador pressionar "Jump" e estiver no chão, aplica uma força vertical ao personagem. Se o jogador pressionar "Jump" enquanto está no ar, exibe uma mensagem de erro.
+   - `EnableJump()`: Habilita o pulo novamente após o tempo definido pelo `coyoteTime`.
+
+### Passo 3: Adicionando o Script ao Personagem
+
+1. Arraste o script `PlayerController.cs` para o seu personagem no Editor Unity.
+2. No Inspector, você poderá ajustar as variáveis públicas (`jumpForce` e `coyoteTime`) conforme necessário.
+
+### Passo 4: Testando o Jogo
+
+Agora, você pode testar o jogo. Quando o personagem estiver no chão, ele deve ser capaz de pular. Se o jogador tentar pular enquanto estiver no ar, ele não poderá fazer outro pulo até que ele toque no chão novamente.
+
+Este é um sistema básico de pulo que você pode expandir conforme necessário, adicionando mais funcionalidades como saltos múltiplos, pulos altos, etc.
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+DATA: 22/07/2026 19:12:50
+
+CONTEXTO:
+
+
+USUÁRIO:
+Crie um sistema de câmera em terceira pessoa na Unity usando C#. A câmera deve seguir o jogador suavemente, permitir rotação com mouse, evitar atravessar paredes usando SphereCast e ter ajuste de distância pelo Inspector.
+
+ASSISTENTE:
+Para criar um sistema de câmera em terceira pessoa na Unity usando C#, siga os passos abaixo:
+
+### Passo 1: Configurar a Cena
+
+1. **Criar uma nova cena**:
+   - Abra o Unity Hub.
+   - Clique em "New Project".
+   - Escolha "3D" como tipo de projeto.
+   - Nomeie o projeto e crie-o.
+
+2. **Adicionar um objeto de câmera**:
+   - No menu GameObject, selecione "Main Camera".
+   - Renomeie a câmera para "PlayerCamera".
+
+3. **Ajustar a posição da câmera**:
+   - Arraste a câmera para baixo e para trás para que ela esteja acima e atrás do jogador.
+
+4. **Desativar a câmera principal**:
+   - Desative a câmera principal clicando no ícone de desligamento ao lado do nome da câmera.
+
+### Passo 2: Criar o Script de Câmera
+
+1. **Criar um novo script**:
+   - No menu Assets, selecione "Create > C# Script".
+   - Nomeie o script como "ThirdPersonCamera".
+
+2. **Abrir o script no Visual Studio**:
+   - Clique duas vezes no script para abrir no Visual Studio ou no editor de código de sua preferência.
+
+### Passo 3: Implementar o Código do Script
+
+No arquivo `ThirdPersonCamera.cs`, adicione o seguinte código:
+
+```csharp
+using UnityEngine;
+
+public class ThirdPersonCamera : MonoBehaviour
+{
+    public Transform player; // Referência ao transform do jogador
+    public float distance = 5.0f; // Distância inicial entre o jogador e a câmera
+    public float heightOffset = 2.0f; // Altura vertical da câmera em relação ao jogador
+    public float rotationSpeed = 2.0f; // Velocidade de rotação da câmera
+    public float smoothTime = 0.2f; // Tempo de suavização da movimentação
+
+    private Vector3 velocity = Vector3.zero;
+    private Quaternion targetRotation;
+
+    void LateUpdate()
+    {
+        if (player != null)
+        {
+            // Rotação horizontal da câmera com o mouse
+            float mouseX = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
+            transform.Rotate(0, mouseX, 0);
+
+            // Rotação vertical da câmera com o mouse
+            float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed * Time.deltaTime;
+            transform.localEulerAngles += new Vector3(-mouseY, 0, 0);
+            transform.localEulerAngles = new Vector3(Mathf.Clamp(transform.localEulerAngles.x, -90f, 90f), transform.localEulerAngles.y, transform.localEulerAngles.z);
+
+            // Posicionamento da câmera
+            Vector3 targetPosition = player.position + transform.forward * distance + transform.up * heightOffset;
+            targetRotation = Quaternion.LookRotation(player.position - transform.position);
+
+            // Suavização da movimentação
+            transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, smoothTime);
+
+            // Verificar colisão com paredes
+            RaycastHit hit;
+            if (Physics.SphereCast(transform.position, 0.5f, transform.forward, out hit))
+            {
+                transform.position = hit.point + transform.forward * 0.5f;
+            }
+        }
+    }
+}
+```
+
+### Passo 4: Ajustar as Propriedades no Inspector
+
+1. **Atribuir a referência do jogador**:
+   - Selecione o objeto `PlayerCamera` no Editor.
+   - No componente `ThirdPersonCamera`, atribua o objeto `Player` à propriedade `player`.
+
+2. **Ajustar as propriedades**:
+   - Você pode ajustar as propriedades `distance`, `heightOffset`, `rotationSpeed` e `smoothTime` diretamente no Inspector para obter o comportamento desejado.
+
+### Passo 5: Testar o Sistema
+
+1. **Play the Scene**:
+   - Clique no botão Play no Editor para testar o sistema de câmera.
+
+2. **Verifique o funcionamento**:
+   - O jogador deve ser seguido pela câmera em terceira pessoa.
+   - A câmera deve se mover suavemente para acompanhar o jogador.
+   - A rotação da câmera deve ser controlada pelo mouse.
+   - A câmera não deve atravessar paredes.
+
+### Conclusão
+
+Este sistema básico de câmera em terceira pessoa permite
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+DATA: 22/07/2026 19:13:35
+
+CONTEXTO:
+
+
+USUÁRIO:
+Analise este código Unity C# e explique por que o personagem está tremendo quando anda. Depois corrija o código.
+
+public class Player : MonoBehaviour
+{
+    public float speed = 5;
+
+    void Update()
+    {
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+
+        transform.position += new Vector3(x,0,z) * speed * Time.deltaTime;
+    }
+}
+
+ASSISTENTE:
+O código que você forneceu parece estar correto para mover um personagem em uma plataforma baseada em Unity. No entanto, se o personagem estiver tremendo ao andar, pode haver alguns fatores a considerar:
+
+1. **Problema com a física**: Se o personagem estiver utilizando componentes físicos como Rigidbody ou Collider, pode haver problemas de colisão ou interação com outros objetos que estão causando movimentos indesejados.
+2. **Problema com a câmera**: O tremor também pode ser causado pela câmera. Se a câmera estiver seguindo o personagem, ela pode estar oscilando junto com ele.
+3. **Problema com a animação**: Se o personagem tiver animações, elas podem estar causando movimentos adicionais.
+
+Vamos analisar o código novamente e fazer algumas sugestões de melhorias:
+
+```csharp
+using UnityEngine;
+
+public class Player : MonoBehaviour
+{
+    public float speed = 5f; // Adicionei 'f' para indicar que é um número de ponto flutuante
+
+    void Update()
+    {
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+
+        // Use Vector3.MoveTowards para suavizar o movimento
+        Vector3 targetPosition = transform.position + new Vector3(x, 0, z) * speed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+    }
+}
+```
+
+### Explicação das Melhorias:
+1. **Adição da letra 'f' após `5`**: Isso garante que o valor seja tratado como um número de ponto flutuante, o que é recomendável em C#.
+2. **Uso de `Vector3.MoveTowards`**: Este método ajuda a suavizar o movimento do personagem, evitando movimentos bruscos ou tremores.
+
+Se o problema persistir, considere verificar os seguintes aspectos:
+
+- **Verifique as colisões e rigidbodies**: Certifique-se de que não há objetos físicos que estejam interferindo no movimento do personagem.
+- **Verifique a câmera**: Se a câmera estiver seguindo o personagem, certifique-se de que ela não esteja causando movimentos adicionais.
+- **Verifique as animações**: Se o personagem tiver animações, verifique se elas estão causando movimentos indesejados.
+
+Espero que essas sugestões ajudem! Se você tiver mais detalhes sobre o comportamento do personagem ou quaisquer outros elementos do seu jogo, sinta-se à vontade para compartilhar.
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+DATA: 22/07/2026 19:14:59
+
+CONTEXTO:
+
+
+USUÁRIO:
+Preciso criar um sistema de inventário na Unity usando C#. Quero:
+- itens empilháveis;
+- ScriptableObjects para criar novos itens;
+- salvar e carregar inventário;
+- eventos quando um item é adicionado ou removido.
+
+Crie uma arquitetura escalável.
+
+ASSISTENTE:
+Para criar um sistema de inventário escalável na Unity utilizando C#, você pode seguir a seguinte estrutura:
+
+### 1. Estrutura de Pastas
+
+```
+Assets/
+├── Scripts/
+│   ├── InventorySystem/
+│   │   ├── Item.cs
+│   │   ├── ItemData.cs
+│   │   ├── Inventory.cs
+│   │   ├── InventoryManager.cs
+│   │   ├── InventoryEvent.cs
+│   │   └── SaveLoadInventory.cs
+│   └── ...
+├── Resources/
+│   ├── Items/
+│   │   ├── ItemPrefab1.prefab
+│   │   ├── ItemPrefab2.prefab
+│   │   └── ...
+│   └── ...
+└── ...
+```
+
+### 2. Criando os Componentes necessários
+
+#### `Item.cs` - Classe base para todos os itens
+
+```csharp
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "NewItem", menuName = "Items/Item")]
+public class Item : ScriptableObject
+{
+    public string itemName;
+    public Sprite icon;
+    public int stackSize = 1;
+}
+```
+
+#### `ItemData.cs` - Dados específicos de cada item (se necessário)
+
+```csharp
+using System.Collections.Generic;
+using UnityEngine;
+
+[System.Serializable]
+public class ItemData
+{
+    public Item item;
+    public int amount;
+}
+```
+
+#### `Inventory.cs` - Representa o inventário do jogador
+
+```csharp
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Inventory : MonoBehaviour
+{
+    private List<ItemData> items = new List<ItemData>();
+
+    public bool AddItem(Item item, int amount)
+    {
+        foreach (var data in items)
+        {
+            if (data.item == item)
+            {
+                data.amount += Mathf.Min(amount, item.stackSize - data.amount);
+                return true;
+            }
+        }
+
+        if (amount > item.stackSize) return false;
+
+        items.Add(new ItemData { item = item, amount = amount });
+        return true;
+    }
+
+    public bool RemoveItem(Item item, int amount)
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            if (items[i].item == item)
+            {
+                if (items[i].amount >= amount)
+                {
+                    items[i].amount -= amount;
+                    if (items[i].amount <= 0)
+                        items.RemoveAt(i);
+
+                    return true;
+                }
+                else
+                {
+                    amount -= items[i].amount;
+                    items.RemoveAt(i);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public List<ItemData> GetItems()
+    {
+        return items;
+    }
+}
+```
+
+#### `InventoryManager.cs` - Gerenciador global do inventário
+
+```csharp
+using UnityEngine;
+
+public class InventoryManager : MonoBehaviour
+{
+    public static InventoryManager Instance { get; private set; }
+
+    [SerializeField] private Inventory inventory;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public Inventory GetInventory()
+    {
+        return inventory;
+    }
+}
+```
+
+#### `InventoryEvent.cs` - Eventos personalizados para notificar sobre mudanças no inventário
+
+```csharp
+using UnityEngine.Events;
+
+public class InventoryEvent : UnityEvent<Item, int> { }
+```
+
+#### `SaveLoadInventory.cs` - Para salvar e carregar o inventário
+
+```csharp
+using System.IO;
+using UnityEngine;
+
+public class SaveLoadInventory : MonoBehaviour
+{
+    public static string SavePath => Application.persistentDataPath + "/inventory.json";
+
+    public static void SaveInventory(Inventory inventory)
+    {
+        var json = JsonUtility.ToJson(inventory);
+        File.WriteAllText(SavePath, json);
+    }
+
+    public static Inventory LoadInventory()
+    {
+        if (!File.Exists(SavePath)) return new Inventory();
+
+        var json = File.ReadAllText(SavePath);
+        return JsonUtility.FromJson<Inventory>(json);
+    }
+}
+```
+
+### 3. Uso dos componentes
+
+No seu script principal, você pode acessar o inventário assim:
+
+```csharp
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    private Inventory inventory;
+
+    private void Start()
+    {
+        inventory = InventoryManager.Instance.GetInventory();
+    }
+
+    public void UseItem(Item item, int amount)
+    {
+        if (inventory.RemoveItem(item, amount))
+        {
+            // Trate o uso do item aqui
+        }
+    }
+
+    public void CollectItem(Item item, int amount)
+    {
+        if (inventory.AddItem(item, amount))
+        {
+            // Trate a coleta do item aqui
+        }
+    }
+}
+```
+
+### 4. Salvando e Carregando o Inventário
+
+Você pode chamar essas funções onde desejar, por
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+DATA: 22/07/2026 19:16:51
+
+CONTEXTO:
+
+
+USUÁRIO:
+Meu jogo Unity está rodando a 30 FPS com 500 inimigos na cena. Explique como otimizar usando:
+- Object Pooling;
+- Jobs System;
+- Burst Compiler;
+- redução de chamadas no Update.
+
+Mostre exemplos em C#.
+
+ASSISTENTE:
+Para otimizar seu jogo Unity com 500 inimigos, podemos aplicar várias técnicas eficientes. Vamos abordar cada uma delas:
+
+### 1. **Object Pooling**
+
+O pooling ajuda a reutilizar objetos que já foram criados e não estão mais em uso, evitando a criação contínua de novos objetos, o que pode ser caro em termos de desempenho.
+
+```csharp
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EnemyPool : MonoBehaviour
+{
+    public GameObject enemyPrefab;
+    public int poolSize = 20;
+    private List<GameObject> pooledEnemies;
+
+    void Start()
+    {
+        pooledEnemies = new List<GameObject>();
+        for (int i = 0; i < poolSize; i++)
+        {
+            GameObject obj = Instantiate(enemyPrefab);
+            obj.SetActive(false);
+            pooledEnemies.Add(obj);
+        }
+    }
+
+    public GameObject GetPooledEnemy()
+    {
+        foreach (GameObject obj in pooledEnemies)
+        {
+            if (!obj.activeInHierarchy)
+            {
+                return obj;
+            }
+        }
+        // Se todos os objetos estiverem em uso, você pode aumentar o tamanho do pool
+        GameObject newObj = Instantiate(enemyPrefab);
+        pooledEnemies.Add(newObj);
+        return newObj;
+    }
+
+    public void ReturnToPool(GameObject obj)
+    {
+        obj.SetActive(false);
+    }
+}
+```
+
+### 2. **Jobs System**
+
+O Unity Jobs System permite executar código em paralelo, aproveitando melhor as capacidades multicore das CPUs modernas.
+
+```csharp
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
+using UnityEngine;
+
+[BurstCompile]
+struct MoveJob : IJobParallelFor
+{
+    [ReadOnly] public NativeArray<Vector3> positions;
+    [WriteOnly] public NativeArray<Vector3> velocities;
+    public float deltaTime;
+
+    public void Execute(int index)
+    {
+        Vector3 direction = positions[index] - transform.position;
+        transform.position += direction * velocities[index] * deltaTime;
+    }
+}
+
+public class EnemyMovement : MonoBehaviour
+{
+    public NativeArray<Vector3> positions;
+    public NativeArray<Vector3> velocities;
+    public float deltaTime;
+
+    void Start()
+    {
+        positions = new NativeArray<Vector3>(transform.childCount, Allocator.Persistent);
+        velocities = new NativeArray<Vector3>(transform.childCount, Allocator.Persistent);
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            positions[i] = transform.GetChild(i).position;
+            velocities[i] = Random.insideUnitSphere * 5f;
+        }
+    }
+
+    void OnDestroy()
+    {
+        positions.Dispose();
+        velocities.Dispose();
+    }
+
+    void Update()
+    {
+        deltaTime = Time.deltaTime;
+        JobHandle handle = new MoveJob
+        {
+            positions = positions,
+            velocities = velocities,
+            deltaTime = deltaTime
+        }.Schedule(transform.childCount, 64);
+
+        handle.Complete();
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).position = positions[i];
+        }
+    }
+}
+```
+
+### 3. **Burst Compiler**
+
+O Burst Compiler é uma ferramenta que compila o código C# para código nativo, resultando em melhor desempenho.
+
+```csharp
+using Unity.Burst;
+using Unity.Collections;
+using UnityEngine;
+
+[BurstCompile]
+public struct CollisionCheckJob : IJobForEach<Collider>
+{
+    public void Execute(ref Collider collider)
+    {
+        // Lógica de colisão aqui
+    }
+}
+
+public class CollisionSystem : MonoBehaviour
+{
+    void Start()
+    {
+        var job = new CollisionCheckJob();
+        job.Schedule(this.GetComponents<Collider>());
+    }
+}
+```
+
+### 4. **Redução de Chamadas no Update**
+
+Minimize o número de chamadas ao `Update` ao agrupar tarefas relacionadas e usar métodos mais eficientes.
+
+```csharp
+using UnityEngine;
+
+public class EnemyController : MonoBehaviour
+{
+    public float speed = 5f;
+
+    void Update()
+    {
+        Move();
+    }
+
+    void Move()
+    {
+        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+    }
+}
+```
+
+### Considerações Finais
+
+- **Profiling**: Use o Profiler do Unity para identificar quais partes do seu jogo estão consumindo mais recursos.
+- **Batching**: Combine renderizações quando possível para evitar sobrecarga de renderização.
+- **Physics Optimization**: Reduza o número de colliders e Rigidbodys se possível, ou use Physics Layers para otimizar a detecção de colisões.
+
+Aplicando essas técnicas, você deve ver uma melhoria significativa no desempenho do seu jogo, permitindo que ele funcione suavemente mesmo com 500 inimigos na cena.
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+DATA: 22/07/2026 19:18:05
+
+CONTEXTO:
+
+
+USUÁRIO:
+Crie um shader para Unity URP usando Shader Graph ou HLSL que faça um material de água com:
+- transparência;
+- movimento de ondas;
+- reflexo simples;
+- controle de intensidade pelo Inspector.
+
+ASSISTENTE:
+Para criar um shader de água em Unity utilizando o Universal Render Pipeline (URP) e Shader Graph, você pode seguir os passos abaixo:
+
+### Passo 1: Criar um Novo Shader Graph
+
+1. No menu `Window > Shader > Universal Render Pipeline > Unlit Shader Graph`, crie um novo Shader Graph.
+2. Renomeie o shader para algo como `WaterShader`.
+
+### Passo 2: Configurar as Entradas do Shader Graph
+
+1. Adicione as seguintes entradas ao seu Shader Graph:
+   - **Base Color**: Para a cor da água.
+   - **Metallic**: Defina como 0 para água.
+   - **Smoothness**: Defina como 0 para água.
+   - **Normal Map**: Para adicionar detalhes texturizados à superfície da água.
+   - **Wave Speed**: Para controlar a velocidade das ondas.
+   - **Wave Amplitude**: Para controlar a amplitude das ondas.
+   - **Reflection Intensity**: Para controlar a intensidade do reflexo.
+
+### Passo 3: Implementar o Movimento de Ondas
+
+1. Adicione um `Texture Sample` node para carregar uma textura de normal map.
+2. Adicione um `Vector Math` node para calcular as coordenadas das ondas.
+3. Conecte a entrada `UV` do `Texture Sample` node à saída `UV` do `Vector Math` node.
+4. Adicione dois `Float` nodes para controlar a velocidade (`Wave Speed`) e a amplitude (`Wave Amplitude`) das ondas.
+5. Use a função `sin` para gerar as ondas. A fórmula geral é `sin(time * waveSpeed + uv.x * waveAmplitude)` para a onda horizontal e `sin(time * waveSpeed + uv.y * waveAmplitude)` para a onda vertical.
+6. Combine essas funções para criar um padrão mais natural de ondas.
+
+### Passo 4: Implementar Reflexo Simples
+
+1. Adicione um `World Space Position` node para obter a posição do mundo do objeto.
+2. Adicione um `Camera Position` node para obter a posição da câmera.
+3. Calcule a direção de reflexão usando a fórmula `(worldPosition - cameraPosition).reflect(normal)`.
+4. Use um `Sample Texture` node para refletir a imagem do fundo.
+5. Combine a imagem original com a imagem refletida usando uma mistura de cores.
+
+### Passo 5: Controlar Intensidade pelo Inspector
+
+1. Adicione parâmetros no topo do Shader Graph para controlar as variáveis mencionadas anteriormente.
+2. Conecte esses parâmetros aos nós correspondentes no Shader Graph.
+
+### Passo 6: Aplicar Transparência
+
+1. Adicione um `Alpha` node para controlar a transparência.
+2. Conecte esse node à saída `Alpha` do Shader Graph.
+
+### Passo 7: Finalizar e Testar
+
+1. Salve o Shader Graph.
+2. Crie um novo material e atribua o Shader Graph criado.
+3. Configure as propriedades do material conforme necessário.
+4. Coloque o material em um objeto em sua cena e teste o resultado.
+
+Este é um esboço básico de como você pode criar um shader de água em URP usando Shader Graph. Você pode ajustar e melhorar este shader adicionando mais funcionalidades, como ripples, turbulência, ou até mesmo física mais complexa dependendo das suas necessidades específicas.
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+DATA: 22/07/2026 19:19:15
+
+CONTEXTO:
+
+
+USUÁRIO:
+Estou criando um multiplayer cooperativo na Unity. Explique uma arquitetura usando Netcode for GameObjects. Crie um exemplo de sincronização de movimento de jogadores e explique como evitar problemas de latência.
+
+ASSISTENTE:
+Netcode for GameObjects (NFG) é a solução oficial da Unity para o desenvolvimento de jogos multiplayer. Ele permite que você crie aplicativos de jogo multiplayer eficientes, escaláveis e fáceis de usar.
+
+Aqui está uma visão geral da arquitetura NFG:
+
+1. **NetworkManager**: Este componente gerencia toda a comunicação entre os clientes e o servidor. Ele também controla a criação e destruição de objetos de rede.
+
+2. **NetworkObject**: Este componente é adicionado aos objetos que você deseja sincronizar entre os clientes e o servidor. Ele contém informações sobre o objeto, como sua posição, rotação e escala.
+
+3. **NetworkBehaviour**: Este componente é derivado de MonoBehaviour e é usado para adicionar funcionalidade ao seu objeto de rede. Você pode sobrescrever métodos como OnStartServer(), OnStartClient() e OnCmdMove() para adicionar comportamentos específicos.
+
+4. **NetworkVariable**: Este componente é usado para criar variáveis que podem ser atualizadas em todos os clientes ou no servidor. Quando uma NetworkVariable é modificada, ela é automaticamente enviada para todos os outros participantes da sessão.
+
+Exemplo de sincronização de movimento de jogadores:
+
+```csharp
+public class PlayerController : NetworkBehaviour
+{
+    public float speed = 5f;
+
+    private Vector3 moveDirection;
+
+    void Update()
+    {
+        if (!IsOwner)
+            return;
+
+        moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        transform.Translate(moveDirection * speed * Time.deltaTime);
+    }
+
+    [Command]
+    void CmdMove(Vector3 position)
+    {
+        transform.position = position;
+    }
+}
+```
+
+No exemplo acima, `PlayerController` é um objeto de rede que tem um componente `NetworkBehaviour`. O método `Update()` é chamado em cada quadro e verifica se o jogador é o proprietário do objeto. Se for, ele calcula a direção de movimento com base nas entradas do teclado e move o objeto.
+
+O método `CmdMove()` é marcado com `[Command]`, o que significa que ele será executado no servidor quando chamado. Quando o servidor recebe uma chamada para este método, ele atualiza a posição do objeto no servidor e envia essa atualização para todos os outros clientes.
+
+Para evitar problemas de latência, você pode considerar as seguintes estratégias:
+
+1. **Interpolação**: Isso envolve estimar a posição dos objetos de rede entre os quadros de renderização. Isso pode fazer com que os objetos pareçam mais suaves e menos "saltitantes".
+
+2. **Previsões Locais**: Isso envolve permitir que os clientes prevejam onde os objetos vão estar antes que o servidor confirme a nova posição. Isso pode reduzir a percepção de latência para o cliente.
+
+3. **Redução de Dados**: Isso envolve enviar apenas as informações necessárias para manter a sincronização dos objetos. Por exemplo, você pode enviar apenas a mudança de posição em vez de enviar a posição completa em cada quadro.
+
+Lembre-se de que essas são apenas algumas das muitas estratégias disponíveis para lidar com a latência em jogos multiplayer. A escolha da estratégia certa dependerá das suas necessidades específicas e do tipo de jogo que você está criando.
+
+================================================================================
+NOVA INTERAÇÃO
+================================================================================
+
+DATA: 22/07/2026 19:20:53
+
+CONTEXTO:
+
+
+USUÁRIO:
+Tenho um projeto Unity 3D de sobrevivência. O jogador coleta recursos, constrói bases e enfrenta inimigos. Quero uma arquitetura completa de código usando:
+- ScriptableObjects;
+- eventos;
+- sistemas desacoplados;
+- save/load;
+- gerenciamento de estados.
+
+Explique a estrutura de pastas e gere os principais scripts.
+
+ASSISTENTE:
+Para criar uma arquitetura robusta para seu jogo de sobrevivência em Unity 3D, vamos organizar o projeto em pastas e criar alguns dos principais scripts necessários. Vamos seguir as melhores práticas de programação orientada a objetos e usar padrões como ScriptableObject, eventos, sistemas desacoplados, save/load e gerenciamento de estados.
+
+### Estrutura das Pastas
+
+1. **Assets**
+   - **Scripts**: Contém todos os scripts do jogo.
+     - **Core**: Scripts fundamentais que não dependem de outros componentes específicos.
+       - `GameManager.cs`: Gerencia o estado global do jogo.
+       - `StateSystem.cs`: Sistema de gerenciamento de estados.
+     - **Entities**: Scripts relacionados aos personagens e entidades.
+       - `PlayerController.cs`: Controla o comportamento do jogador.
+       - `EnemyAI.cs`: Controla o comportamento dos inimigos.
+     - **Resources**: Scripts relacionados à coleta e uso de recursos.
+       - `ResourceCollector.cs`: Lida com a coleta de recursos.
+       - `ResourceItem.cs`: Define os tipos de recursos disponíveis.
+     - **Buildings**: Scripts relacionados à construção de bases.
+       - `BuildingManager.cs`: Gerencia a construção de edifícios.
+       - `Building.cs`: Define a classe base para edifícios.
+     - **Events**: Scripts relacionados aos eventos no jogo.
+       - `EventManager.cs`: Gerencia eventos globais.
+       - `CustomEvent.cs`: Define um evento personalizado.
+     - **SaveLoad**: Scripts relacionados ao save/load do jogo.
+       - `SaveSystem.cs`: Implementa o sistema de save/load.
+       - `GameData.cs`: Define os dados que serão salvos.
+
+2. **Prefabs**: Prefabs dos personagens, inimigos, edifícios, etc.
+
+3. **Resources**: Arquivos de recursos como imagens, somes, etc.
+
+4. **Editor**: Scripts customizados para o editor (opcional).
+
+5. **Scenes**: Cenas do jogo.
+
+6. **Tests**: Testes unitários e integração (opcional).
+
+### Principais Scripts
+
+#### GameManager.cs
+```csharp
+using UnityEngine;
+
+public class GameManager : MonoBehaviour
+{
+    public static GameManager Instance { get; private set; }
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    // Estado atual do jogo
+    public GameState CurrentGameState { get; private set; }
+
+    public enum GameState
+    {
+        Menu,
+        Playing,
+        Paused,
+        GameOver
+    }
+
+    public void SetGameState(GameState state)
+    {
+        CurrentGameState = state;
+        OnGameStateChanged(state);
+    }
+
+    protected virtual void OnGameStateChanged(GameState newState)
+    {
+        switch (newState)
+        {
+            case GameState.Playing:
+                // Iniciar o jogo
+                break;
+            case GameState.Paused:
+                // Pausar o jogo
+                break;
+            case GameState.GameOver:
+                // Finalizar o jogo
+                break;
+        }
+    }
+}
+```
+
+#### StateSystem.cs
+```csharp
+using System.Collections.Generic;
+using UnityEngine;
+
+public class StateSystem : MonoBehaviour
+{
+    private Dictionary<string, object> states = new Dictionary<string, object>();
+
+    public T GetState<T>(string key) where T : class
+    {
+        if (states.ContainsKey(key))
+        {
+            return states[key] as T;
+        }
+        return null;
+    }
+
+    public void AddState(string key, object state)
+    {
+        states[key] = state;
+    }
+
+    public void RemoveState(string key)
+    {
+        states.Remove(key);
+    }
+}
+```
+
+#### PlayerController.cs
+```csharp
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    public float speed = 5f;
+
+    void Update()
+    {
+        Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        transform.Translate(moveDirection * speed * Time.deltaTime);
+    }
+}
+```
+
+#### EnemyAI.cs
+```csharp
+using UnityEngine;
+
+public class EnemyAI : MonoBehaviour
+{
+    public Transform target;
+    public float speed = 2f;
+
+    void Update()
+    {
+        if (target != null)
+        {
+            Vector3 direction = (target.position - transform.position).normalized;
+            transform.Translate(direction * speed * Time.deltaTime);
+        }
+    }
+}
+```
+
+#### ResourceCollector.cs
+```csharp
+using UnityEngine;
+
+public class ResourceCollector : MonoBehaviour
+{
+    public GameObject resourcePrefab;
+    public int maxResources = 10;
+
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input
